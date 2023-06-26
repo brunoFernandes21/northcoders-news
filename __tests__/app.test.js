@@ -80,7 +80,12 @@ describe("GET /api/articles/:article_id", () => {
       expect(body.msg).toBe("Bad request")
     })
   })
-  // test("404: should respond with a Bad request when provided a valid article_id that does not exist", () => {
-
-  // })
+  test("404: should respond with a Not found msg when provided a valid article_id that does not exist", () => {
+    return request(app)
+    .get("/api/articles/99999")
+    .expect(404)
+    .then(( { body }) => {
+      expect(body.msg).toBe("Not found")
+    })
+  })
 });

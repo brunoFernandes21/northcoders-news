@@ -15,7 +15,15 @@ app.all(("*"),(request, response) => {
 })
 
 app.use((err, request, response, next) => {
-    if(err.code)
-    response.status(400).send({msg: "Bad request"})
+    if(err.code){
+        response.status(400).send({msg: "Bad request"})
+    }else{
+        next(err)
+    }
 })
+app.use((err, request, response, next) => { 
+    if(err.msg)
+    response.status(err.status).send({msg: err.msg})
+})
+
 module.exports = app
