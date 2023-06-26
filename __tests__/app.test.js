@@ -72,7 +72,7 @@ describe("GET /api/articles/:article_id", () => {
         });
       });
   });
-  test.only("400: should respond with Bad request when article_id is an invalid type", () => {
+  test("400: should respond with Bad request when article_id is an invalid type", () => {
     return request(app)
     .get("/api/articles/apples")
     .expect(400)
