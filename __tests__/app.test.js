@@ -4,6 +4,7 @@ const request = require("supertest");
 const app = require("../app");
 const testData = require("../db/data/test-data");
 const endpoints = require("../endpoints.json");
+require('jest-sorted');
 
 beforeEach(() => {
   return seed(testData);
@@ -29,7 +30,7 @@ describe("GET /api/topics", () => {
 });
 
 describe("any method: handles all bad paths", () => {
-  test("404: responds with bad request for invalid endpoint", () => {
+  test("404: responds with bad request for invalid path", () => {
     return request(app)
       .get("/api/banana")
       .expect(404)
@@ -86,3 +87,37 @@ describe("GET /api/articles/:article_id", () => {
     })
   })
 });
+
+describe("GET /api/articles", () => {
+  test("200: responds with an array of article objects", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body
+      expect(articles).toHaveLength(13)
+      expect(articles).toBeSortedBy("created_at", { descending: true })
+      articles.forEach((article) => {
+        expect(article).toHaveProperty("author", expect.any(String))
+        expect(article).toHaveProperty("title", expect.any(String))
+        expect(article).toHaveProperty("article_id", expect.any(Number))
+        expect(article).toHaveProperty("topic", expect.any(String))
+        expect(article).toHaveProperty("created_at", expect.any(String))
+        expect(article).toHaveProperty("votes", expect.any(Number))
+        expect(article).toHaveProperty("article_img_url", expect.any(String))
+        expect(article).toHaveProperty("comment_count", expect.any(Number))
+      })
+    })
+  })
+})
+
+describe("handles all bad paths", () => {
+  test("404: should respond with a bad request message", () => {
+    return request(app)
+    .get("/api/apples")
+    .expect(404)
+    .then(( { body }) => {
+      expect(body.msg).toBe("Not Found")
+    })
+  })
+})
