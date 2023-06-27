@@ -141,6 +141,15 @@ describe("GET /api/articles/:article_id/comments", () => {
       })
     })
   })
+  test("200: should respond with an empty array if article_id exists but has no comments", () => {
+    return request(app)
+    .get("/api/articles/2/comments")
+    .expect(200)
+    .then(( { body}) => {
+      const { comments } = body
+      expect(comments).toHaveLength(0)
+    })
+  })
   test("404: should respond with Not Found when article_id is valid but does not exists", () => {
     return request(app)
     .get("/api/articles/99999999/comments")
