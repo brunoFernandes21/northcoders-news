@@ -1,4 +1,5 @@
-const { selectArticleById, selectAllArticles, selectCommentsByArticleId, checkIfArticleIdExists } = require("../models/articles.model");
+const { selectArticleById, selectAllArticles, selectCommentsByArticleId } = require("../models/articles.model");
+const { checkIfExists } = require("../utils/checkIfExists");
 
 exports.getAllArticles = (request, response) => {
   selectAllArticles().then((articles) => {
@@ -19,7 +20,7 @@ exports.getCommentsByArticleId = (request, response, next) => {
   const promisesArray = [selectCommentsByArticleId(article_id)]
   
   if(article_id) {
-    promisesArray.push(checkIfArticleIdExists(article_id))
+    promisesArray.push(checkIfExists("articles", "article_id",  article_id))
   }
   Promise.all(promisesArray).then((revolvedPromises) => {
     const comments = revolvedPromises[0]
