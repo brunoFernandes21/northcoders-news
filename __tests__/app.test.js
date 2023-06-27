@@ -30,7 +30,7 @@ describe("GET /api/topics", () => {
 });
 
 describe("any method: handles all bad paths", () => {
-  test("404: responds with bad request for invalid endpoint", () => {
+  test("404: responds with bad request for invalid path", () => {
     return request(app)
       .get("/api/banana")
       .expect(404)
@@ -70,6 +70,17 @@ describe("GET /api/articles", () => {
         expect(article).toHaveProperty("article_img_url", expect.any(String))
         expect(article).toHaveProperty("comment_count", expect.any(Number))
       })
+    })
+  })
+})
+
+describe("handles all bad paths", () => {
+  test("404: should respond with a bad request message", () => {
+    return request(app)
+    .get("/api/apples")
+    .expect(404)
+    .then(( { body }) => {
+      expect(body.msg).toBe("Not Found")
     })
   })
 })
