@@ -45,9 +45,6 @@ describe("GET /api/", () => {
       .get("/api/")
       .expect(200)
       .then(({ body }) => {
-        expect(body).toHaveProperty(["GET /api"], expect.any(Object));
-        expect(body).toHaveProperty(["GET /api/topics"], expect.any(Object));
-        expect(body).toHaveProperty(["GET /api/articles"], expect.any(Object));
         expect(body).toEqual(endpoints);
       });
   });
