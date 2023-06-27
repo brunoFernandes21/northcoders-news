@@ -6,6 +6,8 @@ const { getAllArticles } = require("./controllers/articles.controller")
 
 const app = express()
 
+app.use(express.json())
+
 app.get("/api/topics", getAllTopics)
 
 app.get("/api/", getAllEndpoints)

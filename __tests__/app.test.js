@@ -121,3 +121,27 @@ describe("handles all bad paths", () => {
     })
   })
 })
+
+// describe("POST /api/articles/:article_id/comments", () => {
+//   test("201: should respond with the posted comment", () => {
+//     const newComment = {
+//       username: "bruno_fernandes",
+//       body: "This is an article that is worth reading"
+//     }
+//     return request(app)
+//     .post("/api/articles/1/comments")
+//     .send(newComment)
+//     .expect(201)
+//     .then(( { body }) => {
+//       const { comment } = body
+//       expect(comment).toMatchObject(
+//         {
+//           "comment_id": 19,
+//           "username": "bruno_fernandes",
+//           "body": "This is an article that is worth reading"
+//         }
+//       )
+      
+//     })
+//   })
+// })
