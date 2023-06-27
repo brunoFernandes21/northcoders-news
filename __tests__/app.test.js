@@ -49,3 +49,40 @@ describe("GET /api/", () => {
       });
   });
 });
+
+describe("GET /api/articles/:article_id", () => {
+  test("200: accepts an article_id parameter and should respond with an article with only the article with that id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.article).toMatchObject({
+          article_id: 1,
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        });
+      });
+  });
+  test("400: should respond with Bad request when article_id is an invalid type", () => {
+    return request(app)
+    .get("/api/articles/apples")
+    .expect(400)
+    .then(( { body }) => {
+      expect(body.msg).toBe("Bad request")
+    })
+  })
+  test("404: should respond with a Not found msg when provided a valid article_id that does not exist", () => {
+    return request(app)
+    .get("/api/articles/99999")
+    .expect(404)
+    .then(( { body }) => {
+      expect(body.msg).toBe("Not found")
+    })
+  })
+});
