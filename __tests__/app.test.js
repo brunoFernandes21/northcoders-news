@@ -123,7 +123,7 @@ describe("handles all bad paths", () => {
 })
 
 describe("POST /api/articles/:article_id/comments", () => {
-  test("201: should respond with the newly posted comment", () => {
+  test("201: should respond with the newly posted comment when only the required properties are present", () => {
     const newComment = {
       username: "butter_bridge",
       body: "This is an article that is worth reading"
@@ -136,6 +136,28 @@ describe("POST /api/articles/:article_id/comments", () => {
       const { comment } = body
       expect(comment.comment_id).toBe(19)
       expect(comment.body).toBe("This is an article that is worth reading")
+      expect(comment.article_id).toBe(1)
+      expect(comment.author).toBe("butter_bridge")
+      expect(comment.votes).toBe(0)
+      expect(comment).toHaveProperty("created_at", expect.any(String))  
+    })
+  })
+  test("200: respond with correct object when comment has extra properties as well as the required ones", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is a must-have book",
+      year: "28-06-2023",
+      favFruit: "Strawberries"
+    }
+
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newComment)
+    .expect(201)
+    .then(({ body }) => {
+      const { comment } = body
+      expect(comment.comment_id).toBe(19)
+      expect(comment.body).toBe("This is a must-have book")
       expect(comment.article_id).toBe(1)
       expect(comment.author).toBe("butter_bridge")
       expect(comment.votes).toBe(0)
