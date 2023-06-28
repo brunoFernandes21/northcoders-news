@@ -122,26 +122,24 @@ describe("handles all bad paths", () => {
   })
 })
 
-// describe("POST /api/articles/:article_id/comments", () => {
-//   test("201: should respond with the posted comment", () => {
-//     const newComment = {
-//       username: "bruno_fernandes",
-//       body: "This is an article that is worth reading"
-//     }
-//     return request(app)
-//     .post("/api/articles/1/comments")
-//     .send(newComment)
-//     .expect(201)
-//     .then(( { body }) => {
-//       const { comment } = body
-//       expect(comment).toMatchObject(
-//         {
-//           "comment_id": 19,
-//           "username": "bruno_fernandes",
-//           "body": "This is an article that is worth reading"
-//         }
-//       )
-      
-//     })
-//   })
-// })
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: should respond with the posted comment", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is an article that is worth reading"
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newComment)
+    .expect(201)
+    .then(( { body }) => {
+      const { comment } = body
+      expect(comment.comment_id).toBe(19)
+      expect(comment.body).toBe("This is an article that is worth reading")
+      expect(comment.article_id).toBe(1)
+      expect(comment.author).toBe("butter_bridge")
+      expect(comment.votes).toBe(0)
+      expect(comment).toHaveProperty("created_at", expect.any(String))  
+    })
+  })
+})
