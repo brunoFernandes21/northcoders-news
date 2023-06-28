@@ -121,3 +121,49 @@ describe("handles all bad paths", () => {
     })
   })
 })
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: should respond with an array of comments for the given article_id", () => {
+    return request(app)
+    .get("/api/articles/1/comments")
+    .expect(200)
+    .then(( { body }) => {
+      const { comments } = body
+      expect(comments).toHaveLength(11)
+      expect(comments).toBeSortedBy("created_at", {descending: true})
+      comments.forEach((comment) => {
+        expect(comment.article_id).toBe(1)
+        expect(comment).toHaveProperty("author", expect.any(String))
+        expect(comment).toHaveProperty("body", expect.any(String))
+        expect(comment).toHaveProperty("article_id", expect.any(Number))
+        expect(comment).toHaveProperty("created_at", expect.any(String))
+        expect(comment).toHaveProperty("votes", expect.any(Number))
+      })
+    })
+  })
+  test("200: should respond with an empty array if article_id exists but has no comments", () => {
+    return request(app)
+    .get("/api/articles/2/comments")
+    .expect(200)
+    .then(( { body}) => {
+      const { comments } = body
+      expect(comments).toHaveLength(0)
+    })
+  })
+  test("404: should respond with Not Found when article_id is valid but does not exists", () => {
+    return request(app)
+    .get("/api/articles/99999999/comments")
+    .expect(404)
+    .then(( { body }) => {
+      expect(body.msg).toBe("Not Found")
+    })
+  })
+  test("400: should respond with Bad request message when passed an invalid article_id", () => {
+    return request(app)
+    .get("/api/articles/strawberries/comments")
+    .expect(400)
+    .then(( { body }) => {
+      expect(body.msg).toBe("Bad request")
+    })
+  })
+})

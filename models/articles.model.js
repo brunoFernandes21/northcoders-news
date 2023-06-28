@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+
 exports.selectAllArticles = () => {
   const queryString =
     "SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id)::INT AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id GROUP BY articles.article_id ORDER BY articles.created_at DESC";
@@ -16,4 +17,12 @@ exports.selectArticleById = ( id ) => {
         }
         return rows[0]
     })
+}
+
+exports.selectCommentsByArticleId = (article_id) => {
+  const queryString = "SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC";
+  const queryValue = [article_id]
+  return db.query(queryString, queryValue).then(( { rows }) => {
+    return rows
+  })
 }
