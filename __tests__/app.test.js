@@ -123,7 +123,7 @@ describe("handles all bad paths", () => {
 })
 
 describe("POST /api/articles/:article_id/comments", () => {
-  test("201: should respond with the posted comment", () => {
+  test("201: should respond with the newly posted comment", () => {
     const newComment = {
       username: "butter_bridge",
       body: "This is an article that is worth reading"
@@ -140,6 +140,16 @@ describe("POST /api/articles/:article_id/comments", () => {
       expect(comment.author).toBe("butter_bridge")
       expect(comment.votes).toBe(0)
       expect(comment).toHaveProperty("created_at", expect.any(String))  
+    })
+  })
+  test("400: should respond with a error message when missing required fields", () => {
+    const newComment = {}
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request")
     })
   })
 })
