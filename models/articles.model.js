@@ -19,3 +19,15 @@ exports.selectArticleById = ( id ) => {
     })
 }
 
+exports.selectUpdatedArticle = (article_id, newVote) => {
+  const queryString = `UPDATE articles SET votes = votes + ${newVote} WHERE article_id = $1 RETURNING *`;
+
+  return db.query(queryString, [article_id]).then(({ rows }) => {
+    if(rows.length === 0) {
+      return Promise.reject({status: 404, msg: "Not Found"})
+    }
+    return rows[0]
+  })
+
+}
+

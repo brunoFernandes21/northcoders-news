@@ -77,6 +77,10 @@
         "created_at": "2023-06-28T08:40:25.909Z"
       }
     ]
+  },
+
+  "PATCH /api/articles/:article_id": {
+    
   }
 
 }
