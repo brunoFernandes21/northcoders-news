@@ -22,7 +22,12 @@ exports.insertComments = (comment, article_id) => {
 };
 
 exports.deleteCommentById = (comment_id) => {
-  const queryString = "DELETE FROM comments WHERE comment_id = $1";
+  const queryString = "DELETE FROM comments WHERE comment_id = $1 RETURNING *";
 
-  return db.query(queryString, [comment_id])
+  return db.query(queryString, [comment_id]).then(({ rows }) => {
+    if(rows.length === 0){
+      return Promise.reject({status: 404, msg: "Not Found"})
+    }
+    return rows[0]
+  })
 }

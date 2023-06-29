@@ -28,10 +28,10 @@ exports.getCommentsByArticleId = (request, response, next) => {
   }
 
 
-exports.deleteComment = (request, response) => {
+exports.deleteComment = (request, response, next) => {
   const { comment_id } = request.params
 
   deleteCommentById(comment_id).then(() => {
-    response.sendStatus(204)
-  })
+    response.sendStatus(204).send()
+  }).catch((next))
 }

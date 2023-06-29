@@ -316,4 +316,20 @@ describe("DELETE /api/comments/:comment_id", () => {
     .delete("/api/comments/1")
     .expect(204)
   })
+  test("400: should respond with error message when comment id is invalid type", () => {
+    return request(app)
+    .delete("/api/comments/peach")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request")
+    })
+  })
+  test("404: should respond with error message when comment id is invalid but does not exist", () => {
+    return request(app)
+    .delete("/api/comments/99999999")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found")
+    })
+  })
 })
