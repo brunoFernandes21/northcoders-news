@@ -147,7 +147,7 @@ describe("POST /api/articles/:article_id/comments", () => {
     return request(app)
     .post("/api/articles/1/comments")
     .send(newComment)
-    .expect(404)
+    .expect(400)
     .then(({ body }) => {
       expect(body.msg).toBe("Missing required fields")
     })
