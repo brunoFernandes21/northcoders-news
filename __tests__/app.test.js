@@ -309,3 +309,10 @@ describe("any methods: handles all bad paths", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: should respond with message no content", () => {
+    return request(app)
+    .delete("/api/comments/")
+  })
+})
