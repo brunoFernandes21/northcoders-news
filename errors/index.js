@@ -15,9 +15,5 @@ exports.handlePsqlErrors = ((err, request, response, next) => {
         response.status(404).send({msg: "Not Found"})
     } else if(err.code === "23502") {
         response.status(400).send({msg: "Missing required fields"})
-    } else if(err.code === "42703") {
-        response.status(400).send({msg: "Incorrect datatype"})
-    } else {
-        next
     }
 })

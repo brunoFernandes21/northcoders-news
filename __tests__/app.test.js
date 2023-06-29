@@ -269,7 +269,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(newVote)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Incorrect datatype");
+        expect(body.msg).toBe("Bad request");
       });
   });
 
