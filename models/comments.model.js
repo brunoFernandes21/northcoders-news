@@ -21,4 +21,8 @@ exports.insertComments = (comment, article_id) => {
   });
 };
 
+exports.deleteCommentById = (comment_id) => {
+  const queryString = "DELETE FROM comments WHERE comment_id = $1";
 
+  return db.query(queryString, [comment_id])
+}
