@@ -29,17 +29,6 @@ describe("GET /api/topics", () => {
   });
 });
 
-describe("any method: handles all bad paths", () => {
-  test("404: responds with bad request for invalid path", () => {
-    return request(app)
-      .get("/api/banana")
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
-      });
-  });
-});
-
 describe("GET /api/", () => {
   test("200: responds with an object describing all the available endpoints on the API", () => {
     return request(app)
@@ -50,6 +39,29 @@ describe("GET /api/", () => {
       });
   });
 });
+
+describe("GET /api/articles", () => {
+  test("200: responds with an array of article objects", () => {
+    return request(app)
+    .get("/api/articles")
+    .expect(200)
+    .then(({ body }) => {
+      const { articles } = body
+      expect(articles).toHaveLength(13)
+      expect(articles).toBeSortedBy("created_at", { descending: true })
+      articles.forEach((article) => {
+        expect(article).toHaveProperty("author", expect.any(String))
+        expect(article).toHaveProperty("title", expect.any(String))
+        expect(article).toHaveProperty("article_id", expect.any(Number))
+        expect(article).toHaveProperty("topic", expect.any(String))
+        expect(article).toHaveProperty("created_at", expect.any(String))
+        expect(article).toHaveProperty("votes", expect.any(Number))
+        expect(article).toHaveProperty("article_img_url", expect.any(String))
+        expect(article).toHaveProperty("comment_count", expect.any(Number))
+      })
+    })
+  })
+})
 
 describe("GET /api/articles/:article_id", () => {
   test("200: accepts an article_id parameter and should respond with an article with only the article with that id", () => {
@@ -87,40 +99,6 @@ describe("GET /api/articles/:article_id", () => {
     })
   })
 });
-
-describe("GET /api/articles", () => {
-  test("200: responds with an array of article objects", () => {
-    return request(app)
-    .get("/api/articles")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body
-      expect(articles).toHaveLength(13)
-      expect(articles).toBeSortedBy("created_at", { descending: true })
-      articles.forEach((article) => {
-        expect(article).toHaveProperty("author", expect.any(String))
-        expect(article).toHaveProperty("title", expect.any(String))
-        expect(article).toHaveProperty("article_id", expect.any(Number))
-        expect(article).toHaveProperty("topic", expect.any(String))
-        expect(article).toHaveProperty("created_at", expect.any(String))
-        expect(article).toHaveProperty("votes", expect.any(Number))
-        expect(article).toHaveProperty("article_img_url", expect.any(String))
-        expect(article).toHaveProperty("comment_count", expect.any(Number))
-      })
-    })
-  })
-})
-
-describe("handles all bad paths", () => {
-  test("404: should respond with a bad request message", () => {
-    return request(app)
-    .get("/api/apples")
-    .expect(404)
-    .then(( { body }) => {
-      expect(body.msg).toBe("Not Found")
-    })
-  })
-})
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: should respond with an array of comments for the given article_id", () => {
@@ -167,3 +145,108 @@ describe("GET /api/articles/:article_id/comments", () => {
     })
   })
 })
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: should respond with the newly posted comment when only the required properties are present", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is an article that is worth reading"
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newComment)
+    .expect(201)
+    .then(( { body }) => {
+      const { comment } = body
+      expect(comment.comment_id).toBe(19)
+      expect(comment.body).toBe("This is an article that is worth reading")
+      expect(comment.article_id).toBe(1)
+      expect(comment.author).toBe("butter_bridge")
+      expect(comment.votes).toBe(0)
+      expect(comment).toHaveProperty("created_at", expect.any(String))  
+    })
+  })
+  test("201: respond with correct object when comment has extra properties as well as the required ones", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is a must-have book",
+      year: "28-06-2023",
+      favFruit: "Strawberries"
+    }
+
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newComment)
+    .expect(201)
+    .then(({ body }) => {
+      const { comment } = body
+      expect(comment.comment_id).toBe(19)
+      expect(comment.body).toBe("This is a must-have book")
+      expect(comment.article_id).toBe(1)
+      expect(comment.author).toBe("butter_bridge")
+      expect(comment.votes).toBe(0)
+      expect(comment).toHaveProperty("created_at", expect.any(String))  
+    })
+  })
+  test("400: should respond with a error message when missing required fields", () => {
+    const newComment = {}
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Missing required fields")
+    })
+  })
+  test("400: should respond with a error message when article id is invalid type", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is an article that is worth reading"
+    }
+    return request(app)
+    .post("/api/articles/apples/comments")
+    .send(newComment)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request")
+    })
+  })
+  test("404: should respond with a error message when article id is valid but does not exist", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is an article that is worth reading"
+    }
+    return request(app)
+    .post("/api/articles/99999/comments")
+    .send(newComment)
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found")
+    })
+  })
+
+  test("404: should respond with an error message when username does not exist", () => {
+    const newComment = {
+      username: "bruno_fernandes",
+      body: "This is an article that is worth reading"
+    }
+    return request(app)
+    .post("/api/articles/1/comments")
+    .send(newComment)
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found")
+    })
+  })
+})
+
+describe("any methods: handles all bad paths", () => {
+  test("404: responds with not found for any invalid path", () => {
+    return request(app)
+      .get("/api/banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
