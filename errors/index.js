@@ -8,6 +8,7 @@ exports.handleCustomerErrors = ((err, request, response, next) => {
 })
 
 exports.handlePsqlErrors = ((err, request, response, next) => {
+
     if(err.code === "22P02"){
         response.status(400).send({msg: "Bad request"})
     }else if(err.code === "23503"){
@@ -16,4 +17,3 @@ exports.handlePsqlErrors = ((err, request, response, next) => {
         response.status(400).send({msg: "Missing required fields"})
     }
 })
-
