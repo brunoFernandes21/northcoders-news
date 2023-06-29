@@ -22,6 +22,7 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 app.post("/api/articles/:article_id/comments", postComments)
 
 app.patch("/api/articles/:article_id", getUpdatedArticle)
+
 app.all(("*"),(request, response) => {
     response.status(404).send({msg: "Not Found"})
 })
