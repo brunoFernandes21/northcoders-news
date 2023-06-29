@@ -4,6 +4,7 @@ const { getAllEndpoints } = require("./controllers/endpoints.controller")
 const { getArticleById, getAllArticles, getUpdatedArticle } = require("./controllers/articles.controller")
 const { getCommentsByArticleId, postComments } = require("./controllers/comments.controller")
 const { handlePsqlErrors, handleCustomerErrors } = require("./errors")
+const { getAllUsers } = require("./controllers/users.controller")
 
 const app = express()
 
@@ -18,6 +19,8 @@ app.get("/api/articles/:article_id", getArticleById)
 app.get("/api/articles", getAllArticles)
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
+
+app.get("/api/users", getAllUsers)
 
 app.post("/api/articles/:article_id/comments", postComments)
 
