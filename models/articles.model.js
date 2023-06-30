@@ -10,11 +10,13 @@ exports.selectAllArticles = (topic) => {
     queryString += "WHERE topic = $1 GROUP BY articles.article_id";
     queryValues.push(topic);
   } else {
-    queryString += "GROUP BY articles.article_id"
+    queryString += "GROUP BY articles.article_id ORDER BY created_at DESC"
   }
 
   return db.query(queryString, queryValues).then(({ rows }) => {
-    console.log(rows.length)
+    if(rows.length === 0) {
+      return Promise.reject({status: 404, msg: "Not Found"})
+    }
     return rows;
   });
 };

@@ -147,7 +147,7 @@ describe("GET /api/articles/:article_id/comments", () => {
 });
 
 describe("GET /api/articles (queries)", () => {
-  test.only("200: accepts a topic query which responds with only articles with that topic.", () => {
+  test("200: accepts a topic query which responds with only articles with that topic.", () => {
     return request(app)
     .get("/api/articles?topic=mitch")
     .expect(200)
@@ -159,12 +159,14 @@ describe("GET /api/articles (queries)", () => {
       })
     });
   });
-  // test("400: should respond with error message when topic is invalid.", () => {
-  //   return request(app).get("/api/articles?topic=999");
-  // });
-  // test("400: should respond with error message when topic is valid but does not exist.", () => {
-  //   return request(app).get("/api/articles?topic=paper");
-  // });
+  test("404: should respond with error message when topic but does not exist.", () => {
+    return request(app)
+    .get("/api/articles?topic=paper")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found")
+    });
+  });
 });
 
 describe("POST /api/articles/:article_id/comments", () => {
