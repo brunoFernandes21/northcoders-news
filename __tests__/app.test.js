@@ -147,20 +147,23 @@ describe("GET /api/articles/:article_id/comments", () => {
 });
 
 describe("GET /api/articles (queries)", () => {
-  test("200: should respond with articles based on the topic value.", () => {
+  test.only("200: accepts a topic query which responds with only articles with that topic.", () => {
     return request(app)
     .get("/api/articles?topic=mitch")
     .expect(200)
-    // .then(({ body }) => {
-    //   const { articles } = body
-    //   expect(articles).toHaveLength(12)
-    //   articles.forEach((article) => {
-    //     expect(article.topic).toBe("mitch");
-    //   })
-    // });
+    .then(({ body }) => {
+      const { articles } = body
+      expect(articles).toHaveLength(12)
+      articles.forEach((article) => {
+        expect(article.topic).toBe("mitch");
+      })
+    });
   });
-  // test("200: should respond with all articles when topic is omitted.", () => {
-  //   return request(app).get("/api/articles?topic");
+  // test("400: should respond with error message when topic is invalid.", () => {
+  //   return request(app).get("/api/articles?topic=999");
+  // });
+  // test("400: should respond with error message when topic is valid but does not exist.", () => {
+  //   return request(app).get("/api/articles?topic=paper");
   // });
 });
 
