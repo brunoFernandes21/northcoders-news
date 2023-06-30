@@ -146,6 +146,24 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("GET /api/articles (queries)", () => {
+  test("200: should respond with articles based on the topic value.", () => {
+    return request(app)
+    .get("/api/articles?topic=mitch")
+    .expect(200)
+    // .then(({ body }) => {
+    //   const { articles } = body
+    //   expect(articles).toHaveLength(12)
+    //   articles.forEach((article) => {
+    //     expect(article.topic).toBe("mitch");
+    //   })
+    // });
+  });
+  // test("200: should respond with all articles when topic is omitted.", () => {
+  //   return request(app).get("/api/articles?topic");
+  // });
+});
+
 describe("POST /api/articles/:article_id/comments", () => {
   test("201: should respond with the newly posted comment when only the required properties are present", () => {
     const newComment = {
@@ -274,29 +292,28 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 
   test("400: should respond with error message when id is invalid", () => {
-    const newVote = { inc_votes: 1}
+    const newVote = { inc_votes: 1 };
 
     return request(app)
-    .patch("/api/articles/orange")
-    .send(newVote)
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Bad request")
-    })
-  })
+      .patch("/api/articles/orange")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
 
   test("404: should respond with error message when id is valid but does not exist in the db", () => {
-    const newVote = { inc_votes: 1}
+    const newVote = { inc_votes: 1 };
 
     return request(app)
-    .patch("/api/articles/9999999")
-    .send(newVote)
-    .expect(404)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Not Found")
-    })
-  })
-
+      .patch("/api/articles/9999999")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
 });
 
 describe("any methods: handles all bad paths", () => {
@@ -312,7 +329,6 @@ describe("any methods: handles all bad paths", () => {
 
 describe("DELETE /api/comments/:comment_id", () => {
   test("204: should respond with message no content", () => {
-    return request(app)
-    .delete("/api/comments/")
-  })
-})
+    return request(app).delete("/api/comments/");
+  });
+});
