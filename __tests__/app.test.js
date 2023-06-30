@@ -311,7 +311,7 @@ describe("any methods: handles all bad paths", () => {
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
-  test("204: should respond with message no content", () => {
+  test("204: should respond with status code of 204", () => {
     return request(app)
     .delete("/api/comments/1")
     .expect(204)
