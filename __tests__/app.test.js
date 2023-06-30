@@ -311,8 +311,25 @@ describe("any methods: handles all bad paths", () => {
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
-  test("204: should respond with message no content", () => {
+  test("204: should respond with status code of 204", () => {
     return request(app)
-    .delete("/api/comments/")
+    .delete("/api/comments/1")
+    .expect(204)
+  })
+  test("400: should respond with error message when comment id is invalid type", () => {
+    return request(app)
+    .delete("/api/comments/peach")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request")
+    })
+  })
+  test("404: should respond with error message when comment id is invalid but does not exist", () => {
+    return request(app)
+    .delete("/api/comments/99999999")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found")
+    })
   })
 })
