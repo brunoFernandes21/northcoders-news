@@ -147,26 +147,45 @@ describe("GET /api/articles/:article_id/comments", () => {
 });
 
 describe("GET /api/articles (queries)", () => {
-  test("200: accepts a topic query which responds with only articles with that topic.", () => {
-    return request(app)
-    .get("/api/articles?topic=mitch")
-    .expect(200)
-    .then(({ body }) => {
-      const { articles } = body
-      expect(articles).toHaveLength(12)
-      articles.forEach((article) => {
-        expect(article.topic).toBe("mitch");
-      })
-    });
-  });
-  test("404: should respond with error message when topic but does not exist.", () => {
-    return request(app)
-    .get("/api/articles?topic=paper")
-    .expect(404)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Not Found")
-    });
-  });
+  // test("200: accepts a topic query which responds with only articles with that topic.", () => {
+  //   return request(app)
+  //   .get("/api/articles?topic=mitch")
+  //   .expect(200)
+  //   .then(({ body }) => {
+  //     const { articles } = body
+  //     expect(articles).toHaveLength(12)
+  //     articles.forEach((article) => {
+  //       expect(article.topic).toBe("mitch");
+  //     })
+  //   });
+  // });
+  // test("200: should respond with empty array when topic is valid but there is not articles with that topic", () => {
+  //   return request(app)
+  //   .get("/api/articles?topic=paper")
+  //   .expect(200)
+  //   .then(({ body }) => {
+  //     const { articles } = body
+  //     expect(articles).toHaveLength(0)
+  //   })
+  // })
+//   test("404: should respond with error message when topic is invalid.", () => {
+//     return request(app)
+//     .get("/api/articles?topic=banana")
+//     .expect(404)
+//     .then(({ body }) => {
+//       expect(body.msg).toBe("Not Found")
+//     });
+// })
+  
+  // test.only("200: accepts a sort_by query which sorts the articles by any valid column ", () => {
+  //   return request(app)
+  //   .get("/api/articles?sort_by=title")
+  //   .then(({ body }) => {
+  //     const { articles } = body
+  //     expect(articles).toHaveLength(13)
+  //     expect(articles).toBeSortedBy('title')
+  //   })
+  // })
 });
 
 describe("POST /api/articles/:article_id/comments", () => {

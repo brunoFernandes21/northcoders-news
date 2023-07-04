@@ -5,12 +5,12 @@ const {
 } = require("../models/articles.model");
 
 exports.getAllArticles = (request, response, next) => {
-  const { topic } = request.query
+  const { topic, sort_by, order } = request.query
 
-  selectAllArticles(topic).then((articles) => {
-    response.status(200).send({ articles });
-  }).catch(next);
-};
+  selectAllArticles(topic, sort_by, order).then((articles) => {
+    response.status(200).send({articles})
+  }).catch(err => next(err))
+}
 
 exports.getArticleById = (request, response, next) => {
   const { article_id: id } = request.params;
