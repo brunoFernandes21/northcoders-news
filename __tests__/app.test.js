@@ -82,6 +82,16 @@ describe("GET /api/articles/:article_id", () => {
         });
       });
   });
+  test("200: should respond with an article object with a comment_count property", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const {article} = body
+        expect(article.comment_count).toBe(11);
+      });
+  })
+  
   test("400: should respond with Bad request when article_id is an invalid type", () => {
     return request(app)
       .get("/api/articles/apples")
@@ -99,6 +109,7 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: should respond with an array of comments for the given article_id", () => {
