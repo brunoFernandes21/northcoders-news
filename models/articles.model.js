@@ -27,7 +27,6 @@ exports.selectAllArticles = (topic) => {
         "GROUP BY articles.article_id ORDER BY articles.created_at DESC";
     }
     return db.query(queryString, queryValues).then(({ rows }) => {
-      console.log(rows, "rowS");
       return rows;
     });
   });
