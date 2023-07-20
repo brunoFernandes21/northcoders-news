@@ -82,6 +82,16 @@ describe("GET /api/articles/:article_id", () => {
         });
       });
   });
+  test("200: should respond with an article object with a comment_count property", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const {article} = body
+        expect(article.comment_count).toBe(11);
+      });
+  })
+  
   test("400: should respond with Bad request when article_id is an invalid type", () => {
     return request(app)
       .get("/api/articles/apples")
@@ -99,6 +109,7 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+
 
 describe("GET /api/articles/:article_id/comments", () => {
   test("200: should respond with an array of comments for the given article_id", () => {
@@ -352,7 +363,42 @@ describe("any methods: handles all bad paths", () => {
 });
 
 describe("DELETE /api/comments/:comment_id", () => {
-  test("204: should respond with message no content", () => {
-    return request(app).delete("/api/comments/");
-  });
-});
+  test("204: should respond with status code of 204", () => {
+    return request(app)
+    .delete("/api/comments/1")
+    .expect(204)
+  })
+  test("400: should respond with error message when comment id is invalid type", () => {
+    return request(app)
+    .delete("/api/comments/peach")
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad request")
+    })
+  })
+  test("404: should respond with error message when comment id is invalid but does not exist", () => {
+    return request(app)
+    .delete("/api/comments/99999999")
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Not Found")
+    })
+  })
+})
+
+describe("GET /api/users", () => {
+  test("200: should respond with an array of all the users", () => {
+    return request(app)
+    .get("/api/users")
+    .expect(200)
+    .then(({ body }) => {
+      const { users } = body;
+        expect(users).toHaveLength(4);
+        users.forEach((user) => {
+          expect(user).toHaveProperty("username", expect.any(String));
+          expect(user).toHaveProperty("name", expect.any(String));
+          expect(user).toHaveProperty("avatar_url", expect.any(String));
+        });
+    })
+  })
+})

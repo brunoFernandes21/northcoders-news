@@ -1,4 +1,4 @@
-const { selectCommentsByArticleId, insertComments } = require("../models/comments.model");
+const { selectCommentsByArticleId, insertComments, deleteCommentById } = require("../models/comments.model");
 const { checkIfExists } = require("../utils/checkIfExists");
 
 exports.postComments = (request, response, next) => {
@@ -27,3 +27,12 @@ exports.getCommentsByArticleId = (request, response, next) => {
       response.status(200).send({comments})
     }).catch(next)
   }
+
+
+exports.deleteComment = (request, response, next) => {
+  const { comment_id } = request.params
+
+  deleteCommentById(comment_id).then(() => {
+    response.sendStatus(204).send()
+  }).catch((next))
+}

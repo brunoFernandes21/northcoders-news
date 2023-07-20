@@ -97,7 +97,8 @@
   },
 
   "DELETE /api/comments/:comment_id": {
-    
+    "description": "deletes comment based on comment id",
+    "queries": ["comment_id"]
   }
 
 }
