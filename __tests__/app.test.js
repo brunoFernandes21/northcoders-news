@@ -157,6 +157,48 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("GET /api/articles (queries)", () => {
+  test("200: accepts a topic query which responds with only articles with that topic.", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(12);
+        articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  test("200: should respond with empty array when topic is valid but there is no articles with that topic", () => {
+    return request(app)
+      .get("/api/articles?topic=paper")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(articles).toHaveLength(0);
+      });
+  });
+  test("404: should respond with error message when topic is invalid.", () => {
+    return request(app)
+      .get("/api/articles?topic=banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+
+  // test.only("200: accepts a sort_by query which sorts the articles by any valid column ", () => {
+  //   return request(app)
+  //   .get("/api/articles?sort_by=title")
+  //   .then(({ body }) => {
+  //     const { articles } = body
+  //     expect(articles).toHaveLength(13)
+  //     expect(articles).toBeSortedBy('title')
+  //   })
+  // })
+});
+
 describe("POST /api/articles/:article_id/comments", () => {
   test("201: should respond with the newly posted comment when only the required properties are present", () => {
     const newComment = {
@@ -285,29 +327,28 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 
   test("400: should respond with error message when id is invalid", () => {
-    const newVote = { inc_votes: 1}
+    const newVote = { inc_votes: 1 };
 
     return request(app)
-    .patch("/api/articles/orange")
-    .send(newVote)
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Bad request")
-    })
-  })
+      .patch("/api/articles/orange")
+      .send(newVote)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad request");
+      });
+  });
 
   test("404: should respond with error message when id is valid but does not exist in the db", () => {
-    const newVote = { inc_votes: 1}
+    const newVote = { inc_votes: 1 };
 
     return request(app)
-    .patch("/api/articles/9999999")
-    .send(newVote)
-    .expect(404)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Not Found")
-    })
-  })
-
+      .patch("/api/articles/9999999")
+      .send(newVote)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
 });
 
 describe("any methods: handles all bad paths", () => {

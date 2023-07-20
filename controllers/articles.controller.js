@@ -4,11 +4,12 @@ const {
   selectUpdatedArticle,
 } = require("../models/articles.model");
 
-exports.getAllArticles = (request, response) => {
-  selectAllArticles().then((articles) => {
-    response.status(200).send({ articles });
-  });
-};
+exports.getAllArticles = (request, response, next) => {
+  const { topic, sort_by, order } = request.query
+  selectAllArticles(topic, sort_by, order).then((articles) => {
+    response.status(200).send({articles})
+  }).catch(err => next(err))
+}
 
 exports.getArticleById = (request, response, next) => {
   const { article_id: id } = request.params;

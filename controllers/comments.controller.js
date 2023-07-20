@@ -21,6 +21,7 @@ exports.getCommentsByArticleId = (request, response, next) => {
     if(article_id) {
       promisesArray.push(checkIfExists("articles", "article_id",  article_id))
     }
+    
     Promise.all(promisesArray).then((revolvedPromises) => {
       const comments = revolvedPromises[0]
       response.status(200).send({comments})
