@@ -188,15 +188,6 @@ describe("GET /api/articles (queries)", () => {
       });
   });
 
-  // test.only("200: accepts a sort_by query which sorts the articles by any valid column ", () => {
-  //   return request(app)
-  //   .get("/api/articles?sort_by=title")
-  //   .then(({ body }) => {
-  //     const { articles } = body
-  //     expect(articles).toHaveLength(13)
-  //     expect(articles).toBeSortedBy('title')
-  //   })
-  // })
 });
 
 describe("POST /api/articles/:article_id/comments", () => {

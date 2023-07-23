@@ -29,6 +29,23 @@
       ]
     }
   },
+  "GET /api/articles?topic=<topic>" : {
+    "description": "serves an array of articles for the given topic",
+    "queries" : ["code", "cooking", "football"],
+    "exampleResponse": {
+      "articles": [
+        {
+          "title": "Seafood substitutions are increasing",
+          "topic": "cooking",
+          "author": "weegembump",
+          "body": "Text from the article..",
+          "created_at": "2018-05-30T15:59:13.341Z",
+          "votes": 0,
+          "comment_count": 6
+        }
+      ]
+    }
+  },
 
   "GET /api/articles/:article_id": {
     "description": "serves an individual article based on the parameter (article_id)",
