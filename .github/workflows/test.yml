@@ -6,8 +6,8 @@ on:
             - main
 jobs:
     greeting:
-        runs-on: ubuntu-lates
+        runs-on: ubuntu-latest
         steps:
             - name: Say Hello!
-            run: echo "Hello from the pipeline! "
+            run: echo 'Hello from the pipeline!''
 
